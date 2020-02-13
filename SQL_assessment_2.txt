@@ -1,0 +1,143 @@
+SQL ASSESSMENT 2
+
+1)
+
+2)
+
+3)
+
+
+4)
+
+5)
+mysql> select s.salesman_name,c.cust_name,c.city,s.city 
+	from customer5 c
+	inner join salesman s 
+	on c.salesman_id=s.salesman_id 
+	where c.city <> s.city;
+
++---------------+-----------+-----------+-----------+
+| salesman_name | cust_name | city      | city      |
++---------------+-----------+-----------+-----------+
+| Raju          | Ricky     | Chennai   | Hyderabad |
+| Abraham       | Ramu      | Bangalore | Banglore  |
+| Srinath       | Amaran    | Chennai   | Mumbai    |
++---------------+-----------+-----------+-----------+
+
+
+6)
+
+mysql> select s.salesman_name,s.city,s.monthly_target,sum(c.purchased_amount) as purchased from salesman s left join customer5 c on s.salesman_id=c.salesman_id group by s.salesman_id having purchased>=s.monthly_target;
++---------------+-----------+----------------+-----------+
+| salesman_name | city      | monthly_target | purchased |
++---------------+-----------+----------------+-----------+
+| John          | Chennai   |          10000 |     10000 |
+| Raju          | Hyderabad |          21000 |     23000 |
+| Srinath       | Mumbai    |           9000 |      9000 |
+| Vijay         | Chennai   |           4000 |      5000 |
++---------------+-----------+----------------+-----------+
+
+7)
+
+8)
+
+9)
+
+10)
+
+mysql> select  distinct s.student_name,c.city_name,l.class 
+	from student s 
+	inner join student_details t 
+	on s.student_detail_id=t.student_detail_id inner join city c on t.city_id=c.city_id inner join class l on t.class_id=l.class_id  group by s.student_name;
++--------------+-----------+-------+
+| student_name | city_name | class |
++--------------+-----------+-------+
+| Ajay         | Chennai   | 11th  |
+| Ramesh       | Bangalore | 10th  |
+| Shriram      | Bangalore | 10th  |
+| Gopi         | Bangalore | 10th  |
+| Kalai        | Chennai   | 11th  |
+| Vinoth       | Bangalore | 12th  |
++--------------+-----------+-------+
+11)
+mysql> select  distinct s.student_name,c.city_name,l.class,l.classroom_num from student s inner join student_details t on s.student_detail_id=t.student_detail_id inner join city c on t.city_id=c.city_id inner join class l on t.class_id=l.class_id where year(l.end_date)='2019' group by s.student_name;
++--------------+-----------+-------+---------------+
+| student_name | city_name | class | classroom_num |
++--------------+-----------+-------+---------------+
+| Ajay         | Chennai   | 11th  |           310 |
+| Ramesh       | Bangalore | 10th  |           257 |
+| Shriram      | Bangalore | 10th  |           257 |
+| Gopi         | Bangalore | 10th  |           257 |
+| Kalai        | Chennai   | 11th  |           310 |
+| Vinoth       | Bangalore | 12th  |           360 |
++--------------+-----------+-------+---------------+
+6 rows in set (0.00 sec)
+
+
+
+12)
+mysql> select distinct s.student_name,c.city_name 
+	from student s inner join student_details t on s.student_detail_id=t.student_detail_id inner join city c on t.city_id=c.city_id inner join class l on t.class_id=l.class_id where c.city_name='Chennai' or l.classroom_num IN (301,310,320);
++--------------+-----------+
+| student_name | city_name |
++--------------+-----------+
+| Ajay         | Chennai   |
+| Ramesh       | Mumbai    |
+| Shriram      | Mumbai    |
+| Gopi         | Mumbai    |
+| Kalai        | Chennai   |
+| Shriram      | Chennai   |
++--------------+-----------+
+
+
+13)
+
+
+mysql> select substr(cust_name,3,LENGTH(cust_name)-4) 
+	from customer;
++-----------------------------------------+
+| substr(cust_name,3,LENGTH(cust_name)-4) |
++-----------------------------------------+
+| mesMart                                 |
+| ckyAda                                  |
+| manuj                                   |
+| othiMahaling                            |
+| aranJot                                 |
+| ilanBa                                  |
+| unKum                                   |
+| neshkum                                 |
++-----------------------------------------+
+
+
+14)
+
+mysql> select substr(cust_name,locate("a",cust_name)) 
+	from customer;
++-----------------------------------------+
+| substr(cust_name,locate("a",cust_name)) |
++-----------------------------------------+
+| amesMartin                              |
+| Adams                                   |
+| amanujan                                |
+| ahalingam                               |
+| AmaranJothi                             |
+| AkilanBala                              |
+| ArunKumar                               |
+| ar                                      |
++-----------------------------------------+
+
+15)
+
+mysql> select cust_name 
+	from customer 
+	where cust_name 
+	LIKE '%a%' 
+	AND cust_name LIKE '%u%' 
+	and cust_name LIKE '%r%';
++-------------+
+| cust_name   |
++-------------+
+| Ramanujan   |
+| ArunKumar   |
+| Dineshkumar |
++-------------+
