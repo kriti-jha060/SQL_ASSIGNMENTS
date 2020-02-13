@@ -1,0 +1,75 @@
+SQL PROBLWM SET 02
+
+
+1)
+
+mysql> SELECT l.name,SUM(p.weight) as total_weight from picked p inner join plant l on p.plantfk=l.plantid group by l.name having l.name="Corn";
++------+--------------+
+| name | total_weight |
++------+--------------+
+| Corn |        17.54 |
++------+--------------+
+
+2)
+
+
+3)
+
+4)
+mysql> select p.name,l.seeds,l.date1 from plant p inner join planted l on p.plantid=l.plantFK where l.seeds <20 and DAYOFMONTH(l.date1)=14 and MONTHNAME(date1)='April';
++--------+-------+------------+
+| name   | seeds | date1      |
++--------+-------+------------+
+| Carrot |    14 | 2012-04-14 |
++--------+-------+------------+
+
+5)
+
+mysql> select name,sunlight,water from plant where name LIKE 'C%' OR name LIKE 'R%';
++--------+----------+-------+
+| name   | sunlight | water |
++--------+----------+-------+
+| Carrot |     0.26 |  0.82 |
+| Corn   |     0.44 |  0.76 |
+| Radish |     0.28 |  0.84 |
++--------+----------+-------+
+
+6)
+
+
+mysql> select p.name,SUM(l.seeds) as total_seeds from plant p inner join planted l on p.plantid=l.plantFK group by l.plantFK order by p.name desc;
++---------+-------------+
+| name    | total_seeds |
++---------+-------------+
+| Tomato  |          38 |
+| Radish  |          30 |
+| Lettuce |          30 |
+| Corn    |          32 |
+| Carrot  |          42 |
+| Beet    |          36 |
++---------+-------------+
+
+
+7)
+
+8)
+mysql> select g.name,p.name,i.date1,i.amount from gardener g inner join picked i on g.gardenerid=i.gardenerFK inner join plant p on i.plantFK=p.plantid where g.name='Tim' and (p.name='Carrot' or p.name='Radish');
++------+--------+------------+--------+
+| name | name   | date1      | amount |
++------+--------+------------+--------+
+| Tim  | Carrot | 2012-08-18 |     28 |
+| Tim  | Radish | 2012-07-16 |     23 |
++------+--------+------------+--------+
+
+9)
+mysql> select distinct g.name from gardener g inner join planted l on g.gardenerid=l.gardenerFK inner join picked p on g.gardenerid=p.gardenerFK where l.locationFK=p.locationFK;
++--------+
+| name   |
++--------+
+| Tim    |
+| Father |
+| Erin   |
++--------+
+
+10)
+
