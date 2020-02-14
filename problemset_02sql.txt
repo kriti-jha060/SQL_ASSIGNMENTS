@@ -72,4 +72,12 @@ mysql> select distinct g.name from gardener g inner join planted l on g.gardener
 +--------+
 
 10)
+mysql> select DISTINCT p.name from plant p inner join picked i on p.plantid=i.plantFK inner join location l on i.locationFK=l.locationid where l.name !="West" and MONTHNAME(i.date1)="August";
++--------+
+| name   |
++--------+
+| Carrot |
+| Corn   |
+| Tomato |
++--------+
 
