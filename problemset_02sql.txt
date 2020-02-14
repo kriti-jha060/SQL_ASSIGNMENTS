@@ -14,6 +14,31 @@ mysql> SELECT l.name,SUM(p.weight) as total_weight from picked p inner join plan
 
 
 3)
+mysql> ALTER TABLE gardener add exper int(30);
+
+mysql> desc gardener;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| gardenerid | int(11)     | NO   | PRI | NULL    |       |
+| name       | varchar(30) | YES  |     | NULL    |       |
+| age        | int(11)     | YES  |     | NULL    |       |
+| exper      | int(30)     | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+
+mysql> alter table gardener modify column exper varchar(30);
+
+mysql> desc gardener;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| gardenerid | int(11)     | NO   | PRI | NULL    |       |
+| name       | varchar(30) | YES  |     | NULL    |       |
+| age        | int(11)     | YES  |     | NULL    |       |
+| exper      | varchar(30) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+
+
 
 4)
 mysql> select p.name,l.seeds,l.date1 from plant p inner join planted l on p.plantid=l.plantFK where l.seeds <20 and DAYOFMONTH(l.date1)=14 and MONTHNAME(date1)='April';
