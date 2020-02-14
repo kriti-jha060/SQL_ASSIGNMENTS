@@ -76,6 +76,15 @@ mysql> select p.name,SUM(l.seeds) as total_seeds from plant p inner join planted
 
 
 7)
+select p.name, (sum(pi.amount)/sum(pl.seeds)) as average from planted pl inner join picked pi on pl.plantFK=pi.plantFK inner join plant p on pl.plantFK=p.plantid group by p.name;
++--------+----------+
+| name   | average |
++--------+----------+
+| Carrot |   0.9524 |
+| Corn   |   2.1875 |
+| Tomato |   0.3947 |
+| Radish |   0.7667 |
++--------+----------+
 
 8)
 mysql> select g.name,p.name,i.date1,i.amount from gardener g inner join picked i on g.gardenerid=i.gardenerFK inner join plant p on i.plantFK=p.plantid where g.name='Tim' and (p.name='Carrot' or p.name='Radish');
