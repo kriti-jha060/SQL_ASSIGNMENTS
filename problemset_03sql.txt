@@ -22,6 +22,15 @@ mysql> select distinct m.title,m.year from movie m inner join rating r on m.mid=
 
 3)
 
+select title from movie where mid not in (select mid from rating group by mid);
++-----------+
+| title     |
++-----------+
+| Star Wars |
+| Titatnic  |
++-----------+
+
+
 4)
 
 mysql> select r.name from reviewer r inner join rating a on r.rid=a.rid where a.ratingdate IS NULL;
@@ -55,6 +64,7 @@ mysql> select distinct e.name,m.title,r.stars,r.ratingdate from movie m inner jo
 +------------------+---------------------+-------+------------+
 
 6)
+
 
 
 7)
