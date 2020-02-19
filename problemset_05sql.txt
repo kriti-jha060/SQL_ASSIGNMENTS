@@ -1,0 +1,136 @@
+
+
+1)
+
+
+mysql> select m_name from musician m join concert c on m.m_no=c.concert_orgniser where concert_venue="Assembly Rooms" and con_date>"1997-02-01";
++---------------+
+| m_name        |
++---------------+
+| James Steeple |
++---------------+
+
+2)
+
+mysql> select m_name,instrument from musician inner join performer on m_no=perf_is inner join place l on born_in=place_no where instrument IN ('guitar' ,'violin') and born_in  IN (select place_no from place where place_country='England');
++------------------+------------+
+| m_name           | instrument |
++------------------+------------+
+| Harry Forte      | violin     |
+| Davis Heavan     | guitar     |
+| Alan Fluff       | violin     |
+| Theo Mengel      | violin     |
+| James First      | violin     |
+| Harriet Smithson | violin     |
++------------------+------------+
+
+
+3)
+
+mysql> select m_name,place_town,con_date from musician inner join concert on m_no=concert_orgniser inner join place on place_no=concert_in where place_country="USA";
++---------------+------------+------------+
+| m_name        | place_town | con_date   |
++---------------+------------+------------+
+| James Steeple | New York   | 1997-06-15 |
++---------------+------------+------------+
+
+
+4)
+mysql> select count(concert_no) from concert inner join performance on concert_no=performed_in where performed=(select cmpn_no from has_composed where cmpr_no=(select comp_no from composer where comp_is=(select m_no from musician where m_name='Andy Jones')));
++-------------------+
+| count(concert_no) |
++-------------------+
+|                 1 |
++-------------------+
+
+5)
+
+mysql> select distinct instrument,count(perf_is)as avg_musician from performer group by instrument;
++------------+--------------+
+| instrument | avg_musician |
++------------+--------------+
+| violin     |            7 |
+| viola      |            4 |
+| banjo      |            1 |
+| guitar     |            2 |
+| trumpet    |            1 |
+| bass       |            3 |
+| flute      |            2 |
+| cornet     |            1 |
+| drums      |            2 |
+| cello      |            3 |
+| trombone   |            1 |
+| horn       |            1 |
+| clarinet   |            1 |
++------------+--------------+
+13 rows in set (0.00 sec)
+
+
+6)
+mysql> select m_name,born,instrument from musician inner join performer on m_no=perf_is where died IS NULL and instrument IN (select instrument from performer inner join musician on m_no=perf_is where m_name='Theo Mengel');
++-------------+------------+------------+
+| m_name      | born       | instrument |
++-------------+------------+------------+
+| John Smith  | 1950-03-03 | violin     |
+| Theo Mengel | 1948-08-12 | banjo      |
+| Harry Forte | 1951-02-28 | violin     |
+| Theo Mengel | 1948-08-12 | violin     |
+| Harry Forte | 1951-02-28 | drums      |
+| Jeff Dawn   | 1945-12-12 | violin     |
+| James First | 1965-06-10 | violin     |
+| Theo Mengel | 1948-08-12 | drums      |
++-------------+------------+------------+
+
+7)
+
+
+8)
+mysql> select distinct m_name from musician inner join has_composed on m_no=cmpr_no inner join performance on m_no=conducted_by where living_in IN (select place_no from place where place_country IN ('England','Scotland') );
++-------------+
+| m_name      |
++-------------+
+| Fred Bloggs |
+| Phil Hot    |
+| Jeff Dawn   |
+| Rose Spring |
++-------------+
+
+
+9)
+
+
+mysql> select instrument,avg_musician from (select distinct instrument,count(perf_is)as avg_musician,RANK() over(order by count(perf_is))s from performer group by instrument)d where s =1;
++------------+--------------+
+| instrument | avg_musician |
++------------+--------------+
+| banjo      |            1 |
+| trumpet    |            1 |
+| cornet     |            1 |
+| trombone   |            1 |
+| horn       |            1 |
+| clarinet   |            1 |
++------------+--------------+
+
+10)
+
+
+11)
+
+mysql> select m_name,place_town from musician inner join place  on born_in=place_no where born_in=(select born_in from musician where m_name='James First') and m_name <> 'James First';
++-------------+------------+
+| m_name      | place_town |
++-------------+------------+
+| Theo Mengel | London     |
+| Alan Fluff  | London     |
+| Andy Jones  | London     |
++-------------+------------+
+
+12)
+
+
+13)
+
+14)
+
+15)
+
