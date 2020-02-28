@@ -1,8 +1,26 @@
 1)
-
+select p.publish_id,p.publish_name,publish_city as correct_publish_city,publish_start_date,branches from publisher p join author a on p.publish_city<>a.author_city and p.publish_city=a.author_country;
++------------+--------------------------+----------------------+--------------------+----------+
+| publish_id | publish_name             | correct_publish_city | publish_start_date | branches |
++------------+--------------------------+----------------------+--------------------+----------+
+| PB02       | Summer Night Publication | Canada               | 2019-08-31         | 25       |
++------------+--------------------------+----------------------+--------------------+----------+
+1 row in set (0.00 sec)
 
 2)
 
+select author_name,author_country,publish_city,publish_start_date,publish_name,branches from (select a.author_name,a.author_country,p.publish_city,p.publish_start_date,p.publish_name,p.branches, rank () over (order by branches desc)r from author a join  publisher p on a.publish_id=p.publish_id where year(publish_start_date)>2000)t where r=1
+    -> union
+    -> select author_name,author_country,publish_city,publish_start_date,publish_name,branches from (select a.author_name,a.author_country,p.publish_city,p.publish_start_date,p.publish_name,p.branches, rank () over (order by branches desc)r1 from author a join  publisher p on a.publish_id=p.publish_id where year(publish_start_date)<2000)t1 where r1=1;
++----------------------+----------------+--------------+--------------------+--------------------------+----------+
+| author_name          | author_country | publish_city | publish_start_date | publish_name             | branches |
++----------------------+----------------+--------------+--------------------+--------------------------+----------+
+| Andrew Jeff          | GERMANY        | Canada       | 2019-08-31         | Summer Night Publication |       25 |
+| William Norton       | UK             | Berlin       | 1929-04-21         | Jex Max Publication      |       10 |
+| John Betjeman Hunter | RUSSIA         | Berlin       | 1929-04-21         | Jex Max Publication      |       10 |
+| S.B.Swaminathan      | INDIA          | Berlin       | 1929-04-21         | Jex Max Publication      |       10 |
+| Drek Tailor          | Australia      | Berlin       | 1929-04-21         | Jex Max Publication      |       10 |
++----------------------+----------------+--------------+--------------------+--------------------------+----------+
 
 3)
 
@@ -20,26 +38,48 @@ mysql> select * from publisher p join author a on a.publish_id=p.publish_id wher
 
 4)
 
-mysql> select AUTHOR_ID,AUTHOR_NAME,case when AUTHOR_CITY='Berlin' then 'Germany' ELSE AUTHOR_COUNTRY END AS AUTHOR_COUNTRY,AUTHOR_CITY,PUBLISH_ID FROM AUTHOR;
-+-----------+----------------------+----------------+---------------+------------+
-| AUTHOR_ID | AUTHOR_NAME          | AUTHOR_COUNTRY | AUTHOR_CITY   | PUBLISH_ID |
-+-----------+----------------------+----------------+---------------+------------+
-| AUT001    | William Norton       | UK             | Cambridge     | PB01       |
-| AUT002    | C.J.Wilde            | USA            | San Francisco | PB04       |
-| AUT003    | John Betjeman Hunter | RUSSIA         | Moscow        | PB01       |
-| AUT004    | John Betjeman Hunter | CANADA         | Toronto       | PB03       |
-| AUT005    | S.B.Swaminathan      | INDIA          | Delhi         | PB01       |
-| AUT006    | Butler Andre         | UK             | London        | PB03       |
-| AUT007    | E. Howard            | Germany        | Berlin        | PB03       |
-| AUT008    | Andrew Jeff          | Germany        | Berlin        | PB02       |
-| AUT009    | Drek Tailor          | Australia      | Melbourne     | PB01       |
-| AUT010    | Mary Coffing         | USA            | New Jersy     | PB04       |
-+-----------+----------------------+----------------+---------------+------------+
+select a.author_id,a.author_name,a.author_country,a.author_city from author a join author b on a.author_city=b.author_city where a.author_country<>b.author_country;
++-----------+-------------+----------------+-------------+
+| author_id | author_name | author_country | author_city |
++-----------+-------------+----------------+-------------+
+| AUT008    | Andrew Jeff | GERMANY        | Berlin      |
+| AUT007    | E. Howard   | EUROPE         | Berlin      |
++-----------+-------------+----------------+-------------+
+2 rows in set (0.00 sec)
+
+select author_id,author_name,case when author_city="berlin" then "GERMANY" else author_country end as author_country,author_city from author;
++-----------+----------------------+----------------+---------------+
+| author_id | author_name          | author_country | author_city   |
++-----------+----------------------+----------------+---------------+
+| AUT001    | William Norton       | UK             | Cambridge     |
+| AUT002    | C.J.Wilde            | USA            | San Francisco |
+| AUT003    | John Betjeman Hunter | RUSSIA         | Moscow        |
+| AUT004    | John Betjeman Hunter | CANADA         | Toronto       |
+| AUT005    | S.B.Swaminathan      | INDIA          | Delhi         |
+| AUT006    | Butler Andre         | UK             | London        |
+| AUT007    | E. Howard            | GERMANY        | Berlin        |
+| AUT008    | Andrew Jeff          | GERMANY        | Berlin        |
+| AUT009    | Drek Tailor          | Australia      | Melbourne     |
+| AUT010    | Mary Coffing         | USA            | New Jersy     |
++-----------+----------------------+----------------+---------------+
 10 rows in set (0.00 sec)
 
 
 5)
-
+select author_id,author_name,author_country,author_city from (select author_id,author_name,author_country,
+    -> CASE WHEN publish_city="berlin" and author_country not in("germany","europe") then "true" when publish_city="new jersy"
+    -> and author_country<>"usa" then "true"  when publish_city="london" and author_country not in("uk","europe") then "true"
+    -> when author_city="canada" and publish_city<>"canada" then "true"end as publish_city,author_city, a.publish_id,publish_name
+    -> from author a join publisher p on a.publish_id=p.publish_id)as temp where publish_city is not null;
++-----------+----------------------+----------------+-------------+
+| author_id | author_name          | author_country | author_city |
++-----------+----------------------+----------------+-------------+
+| AUT001    | William Norton       | UK             | Cambridge   |
+| AUT003    | John Betjeman Hunter | RUSSIA         | Moscow      |
+| AUT004    | John Betjeman Hunter | CANADA         | Toronto     |
+| AUT005    | S.B.Swaminathan      | INDIA          | Delhi       |
+| AUT009    | Drek Tailor          | Australia      | Melbourne   |
++-----------+----------------------+----------------+-------------+
 
 6)
 
